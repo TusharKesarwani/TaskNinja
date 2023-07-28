@@ -1,0 +1,10 @@
+ul {
+  padding: 0px;
+  list-style: none;
+  overflow-x: auto;
+}
+
+hr {
+  background-color: black;
+  padding: 1px;
+}

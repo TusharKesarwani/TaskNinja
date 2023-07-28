@@ -1,0 +1,89 @@
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-item a {
+  border-radius: 5px;
+  background-color: #1ecbe1;
+  display: inline-block;
+  margin-left: auto;
+}
+
+.content {
+  background-color: #fff;
+  /* margin: 10px 30% 0 30%; */
+  border-radius: 10px;
+  list-style: none;
+}
+
+.content-items {
+  margin: 5px;
+  padding: 5px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid black;
+}
+
+.content-items:last-child {
+  border-bottom: none;
+}
+
+.addTask input,
+.addTask select {
+  margin: 10px 10px 0px 0px;
+}
+
+.input-group select {
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--bs-border-radius);
+  border: var(--bs-border-width) solid var(--bs-border-color);
+}
+
+.btn-danger,
+.btn-warning {
+  margin: 5px;
+}
+
+.status-heading {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0px 5px 0px;
+  padding: 15px 0px 15px 0px;
+  background-color: azure;
+  border-radius: 10px;
+}
+
+hr {
+  background-color: black;
+  padding: 1px;
+}
+
+ul {
+  padding: 0px;
+}

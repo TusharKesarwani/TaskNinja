@@ -1,0 +1,367 @@
+<div>
+    <nav class="navbar navbar-expand-md navbar-light z-2" style="height: 70px; background-color: #961EE1;">
+        <div class="container-fluid">
+            <span class="navbar-brand">
+                <h2>
+                    Task Ninja
+                </h2>
+            </span>
+            <button class="navbar-toggler" type="button" aria-controls="navbarContent" [attr.aria-expanded]="!collapsed"
+                aria-label="Toggle navigation" (click)="collapsed = !collapsed">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse" [class.collapse]="collapsed" id="navbarContent">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item d-flex justify-content-end" ngbDropdown display="dynamic"
+                        placement="bottom-end">
+                        <a class="nav-link mx-lg-5 z-3 px-4" tabindex="0" ngbDropdownToggle id="navbarDropdown1"
+                            role="button"> Features </a>
+                        <div ngbDropdownMenu aria-labelledby="navbarDropdown1" class="dropdown-menu z-3">
+                            <button ngbDropdownItem type="submit" (click)="sortTasksByDueDate()">
+                                Sort By Due Date
+                            </button>
+                            <button ngbDropdownItem type="submit" (click)="sortTasksByPriority()">
+                                Sort By Priority
+                            </button>
+                            <button ngbDropdownItem (click)="exportToCSV()">Export to CSV</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3 p-2" style="background-color:#6AE11E; height: calc(100vh - 70px);">
+                <div class="container-fluid">
+                    <h1>
+                        Add Task:
+                    </h1>
+                    <div class="addTask mt-4">
+                        <form [formGroup]="taskForm"
+                            (ngSubmit)="addTask(taskTitle, taskDesc, taskDate, taskPrio, taskStat)">
+                            <div class="mb-3">
+                                <label for="taskTitle">Enter Task Title:</label>
+                                <div class="input-group">
+                                    <input class="form-control" type="text" #taskTitle placeholder="Enter Task Title"
+                                        formControlName="taskTitle" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="taskDescription">Enter Task Description:</label>
+                                <div class="input-group">
+                                    <input class="form-control" type="text" #taskDesc
+                                        placeholder="Enter Task Description" formControlName="taskDesc" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="taskDate">Enter Task Due Date:</label>
+                                <div class="input-group">
+                                    <input class="form-control" type="date" #taskDate formControlName="taskDate"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="taskPrio">Enter Task Priority:</label>
+                                <div class="input-group">
+                                    <select #taskPrio formControlName="taskPrio" class="taskPrio">
+                                        <option value="3">High</option>
+                                        <option value="2">Medium</option>
+                                        <option value="1">Low</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="taskStat">Enter Task Status:</label>
+                                <div class="input-group">
+                                    <select #taskStat formControlName="taskStat" class="taskStat">
+                                        <option value="To-do">To-do</option>
+                                        <option value="In-progress">In-progress</option>
+                                        <option value="Completed">Completed</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary" [disabled]="taskForm.invalid">
+                                Add task
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9" style="background-color: #1ECBE1;">
+                <h1 class="d-flex justify-content-center align-items-center"
+                    style="height: calc(100vh - 100px);opacity:0.5;" *ngIf="getTasksByStatus('To-do').length==0">
+                    No Tasks
+                </h1>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4" style="background-color:#1ECBE1;"
+                            *ngIf="getTasksByStatus('To-do').length!=0">
+                            <h2 class="status-heading">
+                                To-do
+                            </h2>
+                            <div>
+                                <ul class="content overflow-y-auto overflow-x-hidden"
+                                    style="max-height: calc(100vh - 170px);">
+                                    <li *ngFor="let item of getTasksByStatus('To-do')"
+                                        class="content-items overflow-x-auto">
+                                        <h3>{{item.taskTitle}}</h3>
+                                        <h5>Description: {{item.taskDesc}}</h5>
+                                        <h6>Due Date: {{item.taskDate | date}}</h6>
+                                        <h6>Priority: {{item.taskPrio==1 ? 'Low' : (item.taskPrio==2 ? 'Medium' :
+                                            'High')}}</h6>
+                                        <button (click)="removeTask(item.id)" class="btn btn-warning">
+                                            <img src="../assets/trash3.svg" alt="Delete Task">
+                                        </button>
+                                        <ng-template #content let-modal>
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="modal-basic-title">Edit Task:</h4>
+                                                <button type="button" class="btn-close" aria-label="Close"
+                                                    (click)="modal.dismiss('Cross click')"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form [formGroup]="editTaskForm">
+                                                    <div class="mb-3">
+                                                        <label for="editTaskTitle">New Task Title:</label>
+                                                        <div class="input-group">
+                                                            <input #editTaskTitle class="form-control" type="text"
+                                                                placeholder="New Task Title" name="editTaskTitle"
+                                                                formControlName="editTaskTitle" required />
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="editTaskDescription">New Task Description:</label>
+                                                        <div class="input-group">
+                                                            <input #editTaskDescription class="form-control" type="text"
+                                                                placeholder="New Task Description"
+                                                                name="editTaskDescription"
+                                                                formControlName="editTaskDesc" required />
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="editTaskDate">New Task Due Date:</label>
+                                                        <div class="input-group">
+                                                            <input #editTaskDate class="form-control" type="date"
+                                                                name="editTaskDate" formControlName="editTaskDate"
+                                                                required />
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="editTaskPrio">New Task Priority:</label>
+                                                        <div class="input-group">
+                                                            <select #editTaskPrio formControlName="editTaskPrio"
+                                                                class="editTaskPrio">
+                                                                <option value="3">3</option>
+                                                                <option value="2">2</option>
+                                                                <option value="1">1</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-inline-block mb-3">
+                                                        <label for="editTaskStat">New Task Status:</label>
+                                                        <div class="input-group">
+                                                            <select #editTaskStat formControlName="editTaskStat"
+                                                                class="editTaskStat">
+                                                                <option value="To-do">To-do</option>
+                                                                <option value="In-progress">In-progress</option>
+                                                                <option value="Completed">Completed</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-dark"
+                                                    (click)="modal.close('Save click')" (click)="editTask(item.id)"
+                                                    [disabled]="editTaskForm.invalid">Save</button>
+                                            </div>
+                                        </ng-template>
+                                        <button (click)="open(content,item.id)" class="btn btn-warning">
+                                            <img src="../assets/pencil-square.svg" alt="Edit Task">
+                                        </button>
+                                        <app-task-info [items]="list" [idNum]="item.id"></app-task-info>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="background-color:#1ECBE1;"
+                            *ngIf="getTasksByStatus('In-progress').length!=0">
+                            <h2 class="status-heading">
+                                In-Progress
+                            </h2>
+                            <div>
+                                <ul class="content overflow-y-auto" style="max-height: calc(100vh - 170px);">
+                                    <li *ngFor="let item of getTasksByStatus('In-progress')" class="content-items">
+                                        <h3>{{item.taskTitle}}</h3>
+                                        <h5>Description: {{item.taskDesc}}</h5>
+                                        <h6>Due Date: {{item.taskDate | date}}</h6>
+                                        <h6>Priority: {{item.taskPrio==1 ? 'Low' : (item.taskPrio==2 ? 'Medium' :
+                                            'High')}}</h6>
+                                        <button (click)="removeTask(item.id)" class="btn btn-warning">
+                                            <img src="../assets/trash3.svg" alt="Delete Task">
+                                        </button>
+                                        <ng-template #content let-modal>
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="modal-basic-title">Edit Task:</h4>
+                                                <button type="button" class="btn-close" aria-label="Close"
+                                                    (click)="modal.dismiss('Cross click')"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form [formGroup]="editTaskForm">
+                                                    <div class="mb-3">
+                                                        <label for="editTaskTitle">New Task Title:</label>
+                                                        <div class="input-group">
+                                                            <input #editTaskTitle class="form-control" type="text"
+                                                                placeholder="New Task Title" name="editTaskTitle"
+                                                                formControlName="editTaskTitle" required />
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="editTaskDescription">New Task Description:</label>
+                                                        <div class="input-group">
+                                                            <input #editTaskDescription class="form-control" type="text"
+                                                                placeholder="New Task Description"
+                                                                name="editTaskDescription"
+                                                                formControlName="editTaskDesc" required />
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="editTaskDate">New Task Due Date:</label>
+                                                        <div class="input-group">
+                                                            <input #editTaskDate class="form-control" type="date"
+                                                                name="editTaskDate" formControlName="editTaskDate"
+                                                                required />
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="editTaskPrio">New Task Priority:</label>
+                                                        <div class="input-group">
+                                                            <select #editTaskPrio formControlName="editTaskPrio"
+                                                                class="editTaskPrio">
+                                                                <option value="3">3</option>
+                                                                <option value="2">2</option>
+                                                                <option value="1">1</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-inline-block mb-3">
+                                                        <label for="editTaskStat">New Task Status:</label>
+                                                        <div class="input-group">
+                                                            <select #editTaskStat formControlName="editTaskStat"
+                                                                class="editTaskStat">
+                                                                <option value="To-do">To-do</option>
+                                                                <option value="In-progress">In-progress</option>
+                                                                <option value="Completed">Completed</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-dark"
+                                                    (click)="modal.close('Save click')" (click)="editTask(item.id)"
+                                                    [disabled]="editTaskForm.invalid">Save</button>
+                                            </div>
+                                        </ng-template>
+                                        <button (click)="open(content,item.id)" class="btn btn-warning">
+                                            <img src="../assets/pencil-square.svg" alt="Edit Task">
+                                        </button>
+                                        <app-task-info [items]="list" [idNum]="item.id"></app-task-info>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="background-color:#1ECBE1;"
+                            *ngIf="getTasksByStatus('Completed').length!=0">
+                            <h2 class="status-heading">
+                                Completed
+                            </h2>
+                            <div>
+                                <ul class="content overflow-y-auto" style="max-height: calc(100vh - 170px);">
+                                    <li *ngFor="let item of getTasksByStatus('Completed')" class="content-items">
+                                        <h3>{{item.taskTitle}}</h3>
+                                        <h5>Description: {{item.taskDesc}}</h5>
+                                        <h6>Due Date: {{item.taskDate | date}}</h6>
+                                        <h6>Priority: {{item.taskPrio==1 ? 'Low' : (item.taskPrio==2 ? 'Medium' :
+                                            'High')}}</h6>
+                                        <button (click)="removeTask(item.id)" class="btn btn-warning">
+                                            <img src="../assets/trash3.svg" alt="Delete Task">
+                                        </button>
+                                        <ng-template #content let-modal>
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="modal-basic-title">Edit Task:</h4>
+                                                <button type="button" class="btn-close" aria-label="Close"
+                                                    (click)="modal.dismiss('Cross click')"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form [formGroup]="editTaskForm">
+                                                    <div class="mb-3">
+                                                        <label for="editTaskTitle">New Task Title:</label>
+                                                        <div class="input-group">
+                                                            <input #editTaskTitle class="form-control" type="text"
+                                                                placeholder="New Task Title" name="editTaskTitle"
+                                                                formControlName="editTaskTitle" required />
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="editTaskDescription">New Task Description:</label>
+                                                        <div class="input-group">
+                                                            <input #editTaskDescription class="form-control" type="text"
+                                                                placeholder="New Task Description"
+                                                                name="editTaskDescription"
+                                                                formControlName="editTaskDesc" required />
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="editTaskDate">New Task Due Date:</label>
+                                                        <div class="input-group">
+                                                            <input #editTaskDate class="form-control" type="date"
+                                                                name="editTaskDate" formControlName="editTaskDate"
+                                                                required />
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="editTaskPrio">New Task Priority:</label>
+                                                        <div class="input-group">
+                                                            <select #editTaskPrio formControlName="editTaskPrio"
+                                                                class="editTaskPrio">
+                                                                <option value="3">3</option>
+                                                                <option value="2">2</option>
+                                                                <option value="1">1</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-inline-block mb-3">
+                                                        <label for="editTaskStat">New Task Status:</label>
+                                                        <div class="input-group">
+                                                            <select #editTaskStat formControlName="editTaskStat"
+                                                                class="editTaskStat">
+                                                                <option value="To-do">To-do</option>
+                                                                <option value="In-progress">In-progress</option>
+                                                                <option value="Completed">Completed</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-dark"
+                                                    (click)="modal.close('Save click')" (click)="editTask(item.id)"
+                                                    [disabled]="editTaskForm.invalid">Save</button>
+                                            </div>
+                                        </ng-template>
+                                        <button (click)="open(content,item.id)" class="btn btn-warning">
+                                            <img src="../assets/pencil-square.svg" alt="Edit Task">
+                                        </button>
+                                        <app-task-info [items]="list" [idNum]="item.id"></app-task-info>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
