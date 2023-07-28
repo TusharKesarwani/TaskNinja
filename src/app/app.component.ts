@@ -39,6 +39,14 @@ export class AppComponent {
 
   list: any[] = [];
   tempList: any[] = [];
+
+  ngOnInit() {
+    const storedTasks = localStorage.getItem('tasks');
+    if (storedTasks) {
+      this.list = JSON.parse(storedTasks);
+    }
+  }
+
   addTask(taskTitle:any, taskDesc:any, taskDate:any, taskPrio:any, taskStat:any) {
     const newTask = {
       id: this.list.length,
@@ -55,11 +63,12 @@ export class AppComponent {
     taskDate.value=null;
     taskPrio.value=null;
     this.taskForm.reset({taskTitle:'',taskDesc:'',taskDate:'',taskPrio:'3',taskStat: 'To-do'});
-
+    this.saveTasksToLocalStorage();
   }
   
   removeTask(id: number) {
     this.list = this.list.filter((item) => item.id !== id);
+    this.saveTasksToLocalStorage();
   }
   
   
@@ -107,6 +116,7 @@ export class AppComponent {
     this.list[idNum].taskStat = this.editTaskForm.value.editTaskStat;
     console.log(this.list[idNum].history);
     this.editTaskForm.reset({editTaskTitle:'',editTaskDesc:'',editTaskDate:'',editTaskPrio:'3',editTaskStat: 'To-do'});
+    this.saveTasksToLocalStorage();
   }
 
   getTasksByStatus(status: string) {
@@ -146,6 +156,10 @@ export class AppComponent {
     const csvData = this.papa.unparse(this.list);
     const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
     saveAs(blob, 'tasks.csv');
+  }
+
+  private saveTasksToLocalStorage() {
+    localStorage.setItem('tasks', JSON.stringify(this.list));
   }
 
 }
