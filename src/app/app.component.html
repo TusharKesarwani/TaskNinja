@@ -91,7 +91,7 @@
             </div>
             <div class="col-md-9" style="background-color: #1ECBE1;">
                 <h1 class="d-flex justify-content-center align-items-center"
-                    style="height: calc(100vh - 100px);opacity:0.5;" *ngIf="getTasksByStatus('To-do').length==0">
+                    style="height: calc(100vh - 100px);opacity:0.5;" *ngIf="list.length==0">
                     No Tasks
                 </h1>
                 <div class="container">
@@ -112,7 +112,7 @@
                                         <h6>Priority: {{item.taskPrio==1 ? 'Low' : (item.taskPrio==2 ? 'Medium' :
                                             'High')}}</h6>
                                         <button (click)="removeTask(item.id)" class="btn btn-warning">
-                                            <img src="https://github.com/TusharKesarwani/TaskNinja/blob/master/src/assets/trash3.svg" alt="Delete Task">
+                                            <img src="https://raw.githubusercontent.com/TusharKesarwani/TaskNinja/7764598518b91fded550e1b0dda7a35f9e424ce2/src/assets/trash3.svg" alt="Delete Task">
                                         </button>
                                         <ng-template #content let-modal>
                                             <div class="modal-header">
@@ -178,7 +178,7 @@
                                             </div>
                                         </ng-template>
                                         <button (click)="open(content,item.id)" class="btn btn-warning">
-                                            <img src="https://github.com/TusharKesarwani/TaskNinja/blob/master/src/assets/pencil-square.svg" alt="Edit Task">
+                                            <img src="https://raw.githubusercontent.com/TusharKesarwani/TaskNinja/7764598518b91fded550e1b0dda7a35f9e424ce2/src/assets/pencil-square.svg" alt="Edit Task">
                                         </button>
                                         <app-task-info [items]="list" [idNum]="item.id"></app-task-info>
                                     </li>
@@ -199,7 +199,7 @@
                                         <h6>Priority: {{item.taskPrio==1 ? 'Low' : (item.taskPrio==2 ? 'Medium' :
                                             'High')}}</h6>
                                         <button (click)="removeTask(item.id)" class="btn btn-warning">
-                                            <img src="https://github.com/TusharKesarwani/TaskNinja/blob/master/src/assets/trash3.svg" alt="Delete Task">
+                                            <img src="https://raw.githubusercontent.com/TusharKesarwani/TaskNinja/7764598518b91fded550e1b0dda7a35f9e424ce2/src/assets/trash3.svg" alt="Delete Task">
                                         </button>
                                         <ng-template #content let-modal>
                                             <div class="modal-header">
@@ -265,7 +265,7 @@
                                             </div>
                                         </ng-template>
                                         <button (click)="open(content,item.id)" class="btn btn-warning">
-                                            <img src="https://github.com/TusharKesarwani/TaskNinja/blob/master/src/assets/pencil-square.svg" alt="Edit Task">
+                                            <img src="https://raw.githubusercontent.com/TusharKesarwani/TaskNinja/7764598518b91fded550e1b0dda7a35f9e424ce2/src/assets/pencil-square.svg" alt="Edit Task">
                                         </button>
                                         <app-task-info [items]="list" [idNum]="item.id"></app-task-info>
                                     </li>
@@ -286,7 +286,7 @@
                                         <h6>Priority: {{item.taskPrio==1 ? 'Low' : (item.taskPrio==2 ? 'Medium' :
                                             'High')}}</h6>
                                         <button (click)="removeTask(item.id)" class="btn btn-warning">
-                                            <img src="https://github.com/TusharKesarwani/TaskNinja/blob/master/src/assets/trash3.svg" alt="Delete Task">
+                                            <img src="https://raw.githubusercontent.com/TusharKesarwani/TaskNinja/7764598518b91fded550e1b0dda7a35f9e424ce2/src/assets/trash3.svg" alt="Delete Task">
                                         </button>
                                         <ng-template #content let-modal>
                                             <div class="modal-header">
@@ -352,7 +352,7 @@
                                             </div>
                                         </ng-template>
                                         <button (click)="open(content,item.id)" class="btn btn-warning">
-                                            <img src="https://github.com/TusharKesarwani/TaskNinja/blob/master/src/assets/pencil-square.svg" alt="Edit Task">
+                                            <img src="https://raw.githubusercontent.com/TusharKesarwani/TaskNinja/7764598518b91fded550e1b0dda7a35f9e424ce2/src/assets/pencil-square.svg" alt="Edit Task">
                                         </button>
                                         <app-task-info [items]="list" [idNum]="item.id"></app-task-info>
                                     </li>
