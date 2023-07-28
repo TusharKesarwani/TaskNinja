@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectorRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ModalDismissReasons, NgbDatepickerModule, NgbModal, NgbActiveModal, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { saveAs } from 'file-saver';
@@ -14,7 +14,8 @@ import { Papa } from 'ngx-papaparse';
 export class AppComponent {
   title = 'TaskNinja';
 
-  constructor(private modalService: NgbModal, private papa: Papa) {}
+  constructor(private modalService: NgbModal, private papa: Papa, private cdr: ChangeDetectorRef) {}
+
 
   closeResult:any;
   sortByDueDate: boolean = false;
@@ -141,6 +142,7 @@ export class AppComponent {
     }
     this.sortByDueDate = !this.sortByDueDate;
     this.sortByPriority = false;
+    this.cdr.detectChanges();
   }
 
   sortTasksByPriority() {
@@ -151,6 +153,7 @@ export class AppComponent {
     }
     this.sortByPriority = !this.sortByPriority;
     this.sortByDueDate = false;
+    this.cdr.detectChanges();
   }
 
   exportToCSV() {
@@ -162,5 +165,6 @@ export class AppComponent {
   private saveTasksToLocalStorage() {
     localStorage.setItem('tasks', JSON.stringify(this.list));
   }
+  
 
 }
