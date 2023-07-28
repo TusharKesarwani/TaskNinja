@@ -39,6 +39,7 @@ export class AppComponent {
 
   list: any[] = [];
   tempList: any[] = [];
+  count: number = 0;
 
   ngOnInit() {
     const storedTasks = localStorage.getItem('tasks');
@@ -49,7 +50,7 @@ export class AppComponent {
 
   addTask(taskTitle:any, taskDesc:any, taskDate:any, taskPrio:any, taskStat:any) {
     const newTask = {
-      id: this.list.length,
+      id: this.count,
       taskTitle: this.taskForm.value.taskTitle,
       taskDesc: this.taskForm.value.taskDesc,
       taskDate: this.taskForm.value.taskDate,
@@ -58,6 +59,7 @@ export class AppComponent {
       history: [],
     };
     this.list.push(newTask);
+    this.count = this.count+1;
     taskTitle.value=null;
     taskDesc.value=null;
     taskDate.value=null;
@@ -114,7 +116,6 @@ export class AppComponent {
     this.list[idNum].taskDate = this.editTaskForm.value.editTaskDate;
     this.list[idNum].taskPrio = this.editTaskForm.value.editTaskPrio;
     this.list[idNum].taskStat = this.editTaskForm.value.editTaskStat;
-    console.log(this.list[idNum].history);
     this.editTaskForm.reset({editTaskTitle:'',editTaskDesc:'',editTaskDate:'',editTaskPrio:'3',editTaskStat: 'To-do'});
     this.saveTasksToLocalStorage();
   }
